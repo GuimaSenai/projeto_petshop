@@ -1,0 +1,100 @@
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PetShop - Painel de Controle</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+
+        <header class="navbar">
+            <div class="container">
+                <h1>🐾 PetShop <span>Dashboard</span></h1>
+                <p>Integração PHP + MySQL no Laragon</p>
+            </div>
+        </header>
+
+        <main class="container grid">
+
+            <section class="card">
+                <div class="card-header">
+                    <span class="badge badge-blue">GET</span>
+                    <h2>Todos os Animais</h2>
+                </div>
+                <p class="endpoint"><code>?rota=animais</code></p>
+                <div class="card-body">
+                    <pre id="todos">Carregando dados...</pre>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <span class="badge badge-green">GET</span>
+                    <h2>Filtrar por Espécie (Cachorro)</h2>
+                </div>
+                <p class="endpoint"><code>?rota=animais/especie&especie=Cachorro</code></p>
+                <div class="card-body">
+                    <pre id="filtro">Carregando dados...</pre>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <span class="badge badge-purple">GET</span>
+                    <h2>Filtrar por Raça (Labrador)</h2>
+                </div>
+                <p class="endpoint"><code>?rota=animais/raca&raca=Labrador</code></p>
+                <div class="card-body">
+                    <pre id="raca">Carregando dados...</pre>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <span class="badge badge-orange">GET</span>
+                    <h2>Média de Idade dos Animais</h2>
+                </div>
+                <p class="endpoint"><code>?rota=animais/idade-media</code></p>
+                <div class="card-body">
+                    <pre id="idade-media">Carregando dados...</pre>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <div class="container">
+                <p>Desenvolvido por <strong>GUIDUMAL</strong> &copy;</p>
+            </div>
+        </footer>
+
+        <script>
+            const base = "http://localhost/petshop/back/index.php";
+
+            // Função genérica para carregar os dados das rotas
+            function carregarRota(url, elementoId) {
+                fetch(url)
+                    .then(res => {
+                        if (!res.ok) throw new Error("Erro na requisição: " + res.status);
+                        return res.json();
+                    })
+                    .then(dados => {
+                        document.getElementById(elementoId).textContent = JSON.stringify(dados, null, 2);
+                    })
+                    .catch(err => {
+                        document.getElementById(elementoId).textContent = "⚠️ Erro ao carregar: " + err.message;
+                    });
+            }
+
+            // Executa todas as rotas ao abrir a página
+            carregarRota(`${base}?rota=animais`, "todos");
+            carregarRota(`${base}?rota=animais/especie&especie=Cachorro`, "filtro");
+            carregarRota(`${base}?rota=animais/raca&raca=Labrador`, "raca");
+            carregarRota(`${base}?rota=animais/idade-media`, "idade-media");
+        </script>
+    </body>
+    </html>
