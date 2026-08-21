@@ -18,7 +18,7 @@ function listarAnimais($con) {
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
-// Rota já pronta 2: filtra animais por espécie (?rota=animais/especie&especie=Cachorro)
+// Rota já pronta 2: filtra animais por espécie
 function listarPorEspecie($con) {
     $especie = $_GET["especie"] ?? "";
     $stmt = $con->prepare("SELECT * FROM Animais WHERE especie = ?");
@@ -26,7 +26,7 @@ function listarPorEspecie($con) {
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
-// Nova Rota 1: filtra animais por raça (?rota=animais/raca&raca=Poodle)
+// Rota 3: filtra animais por raça
 function listarPorRaca($con) {
     $raca = $_GET["raca"] ?? "";
     $stmt = $con->prepare("SELECT * FROM Animais WHERE raca = ?");
@@ -34,10 +34,50 @@ function listarPorRaca($con) {
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
-// Nova Rota 2: retorna a idade média dos animais (?rota=animais/idade-media)
-function calcularIdadeMedia($con) {
+// Rota 4: calcula a idade média
+function idadeMedia($con) {
     $stmt = $con->query("SELECT AVG(idade) AS idade_media FROM Animais");
     echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+}
+
+// Rota 5: lista todos os serviços
+function listarServicos($con) {
+    $stmt = $con->query("SELECT * FROM Servicos");
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+}
+
+// Rota 6: filtra serviços por categoria
+function listarPorCategoria($con) {
+    $categoria = $_GET["categoria"] ?? "";
+    $stmt = $con->prepare("SELECT * FROM Servicos WHERE categoria = ?");
+    $stmt->execute([$categoria]);
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+}
+
+// Rota 7: calcula o preço médio dos serviços
+function precoMedio($con) {
+    $stmt = $con->query("SELECT AVG(preco) AS preco_medio FROM Servicos");
+    echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+}
+
+// Rota 8: mostra o serviço mais caro
+function maiorPreco($con) {
+    $stmt = $con->query("SELECT * FROM Servicos ORDER BY preco DESC LIMIT 1");
+    echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+}
+
+// Rota bônus: junta animais e serviços
+function listarAnimaisEServicos($con) {
+    $stmtAnimais = $con->query("SELECT * FROM Animais");
+    $animais = $stmtAnimais->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtServicos = $con->query("SELECT * FROM Servicos");
+    $servicos = $stmtServicos->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode([
+        "animais" => $animais,
+        "servicos" => $servicos
+    ]);
 }
 
 switch ($rota) {
@@ -54,7 +94,27 @@ switch ($rota) {
         break;
 
     case "animais/idade-media":
-        calcularIdadeMedia($con);
+        idadeMedia($con);
+        break;
+
+    case "servicos":
+        listarServicos($con);
+        break;
+
+    case "servicos/categoria":
+        listarPorCategoria($con);
+        break;
+
+    case "servicos/media-preco":
+        precoMedio($con);
+        break;
+
+    case "servicos/maior-preco":
+        maiorPreco($con);
+        break;
+
+    case "animais/servicos":
+        listarAnimaisEServicos($con);
         break;
 
     default:

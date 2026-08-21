@@ -1,100 +1,125 @@
-    <!DOCTYPE html>
-    <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PetShop - Painel de Controle</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    </head>
-    <body>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>PetShop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-        <header class="navbar">
-            <div class="container">
-                <h1>🐾 PetShop <span>Dashboard</span></h1>
-                <p>Integração PHP + MySQL no Laragon</p>
-            </div>
-        </header>
+<body>
 
-        <main class="container grid">
+    <h1>PetShop</h1>
 
-            <section class="card">
-                <div class="card-header">
-                    <span class="badge badge-blue">GET</span>
-                    <h2>Todos os Animais</h2>
-                </div>
-                <p class="endpoint"><code>?rota=animais</code></p>
-                <div class="card-body">
-                    <pre id="todos">Carregando dados...</pre>
-                </div>
-            </section>
+    <h2>Todos os animais</h2>
+    <div id="todos">Carregando...</div>
 
-            <section class="card">
-                <div class="card-header">
-                    <span class="badge badge-green">GET</span>
-                    <h2>Filtrar por Espécie (Cachorro)</h2>
-                </div>
-                <p class="endpoint"><code>?rota=animais/especie&especie=Cachorro</code></p>
-                <div class="card-body">
-                    <pre id="filtro">Carregando dados...</pre>
-                </div>
-            </section>
+    <h2>Animais da espécie Cachorro</h2>
+    <div id="especie">Carregando...</div>
 
-            <section class="card">
-                <div class="card-header">
-                    <span class="badge badge-purple">GET</span>
-                    <h2>Filtrar por Raça (Labrador)</h2>
-                </div>
-                <p class="endpoint"><code>?rota=animais/raca&raca=Labrador</code></p>
-                <div class="card-body">
-                    <pre id="raca">Carregando dados...</pre>
-                </div>
-            </section>
+    <h2>Animais da raça Labrador</h2>
+    <div id="raca">Carregando...</div>
 
-            <section class="card">
-                <div class="card-header">
-                    <span class="badge badge-orange">GET</span>
-                    <h2>Média de Idade dos Animais</h2>
-                </div>
-                <p class="endpoint"><code>?rota=animais/idade-media</code></p>
-                <div class="card-body">
-                    <pre id="idade-media">Carregando dados...</pre>
-                </div>
-            </section>
+    <h2>Idade média dos animais</h2>
+    <div id="idade">Carregando...</div>
 
-        </main>
+    <h2>Todos os serviços</h2>
+    <div id="servicos">Carregando...</div>
 
-        <footer>
-            <div class="container">
-                <p>Desenvolvido por <strong>GUIDUMAL</strong> &copy;</p>
-            </div>
-        </footer>
+    <h2>Serviços da categoria Estética</h2>
+    <div id="categoria">Carregando...</div>
 
-        <script>
-            const base = "http://localhost/petshop/back/index.php";
+    <h2>Preço médio dos serviços</h2>
+    <div id="preco">Carregando...</div>
 
-            // Função genérica para carregar os dados das rotas
-            function carregarRota(url, elementoId) {
-                fetch(url)
-                    .then(res => {
-                        if (!res.ok) throw new Error("Erro na requisição: " + res.status);
-                        return res.json();
-                    })
-                    .then(dados => {
-                        document.getElementById(elementoId).textContent = JSON.stringify(dados, null, 2);
-                    })
-                    .catch(err => {
-                        document.getElementById(elementoId).textContent = "⚠️ Erro ao carregar: " + err.message;
-                    });
-            }
+    <h2>Animais e Serviços</h2>
+    <div id="animaisServicos">Carregando...</div>
 
-            // Executa todas as rotas ao abrir a página
-            carregarRota(`${base}?rota=animais`, "todos");
-            carregarRota(`${base}?rota=animais/especie&especie=Cachorro`, "filtro");
-            carregarRota(`${base}?rota=animais/raca&raca=Labrador`, "raca");
-            carregarRota(`${base}?rota=animais/idade-media`, "idade-media");
-        </script>
-    </body>
-    </html>
+
+    <script>
+
+        const url = "http://localhost/petshop/back/index.php";
+
+
+        fetch(url + "?rota=animais")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("todos").innerHTML =
+                    JSON.stringify(dados);
+
+            });
+
+
+        fetch(url + "?rota=animais/especie&especie=Cachorro")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("especie").innerHTML =
+                    JSON.stringify(dados);
+
+            });
+
+
+        fetch(url + "?rota=animais/raca&raca=Labrador")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("raca").innerHTML =
+                    JSON.stringify(dados);
+
+            });
+
+
+        fetch(url + "?rota=animais/idade-media")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("idade").innerHTML =
+                    "Idade média: " + dados.idade_media;
+
+            });
+
+
+        fetch(url + "?rota=servicos")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("servicos").innerHTML =
+                    JSON.stringify(dados);
+
+            });
+
+
+        fetch(url + "?rota=servicos/categoria&categoria=Estética")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("categoria").innerHTML =
+                    JSON.stringify(dados);
+
+            });
+
+
+        fetch(url + "?rota=servicos/media-preco")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("preco").innerHTML =
+                    "Preço médio: R$ " + dados.preco_medio;
+
+            });
+
+
+        fetch(url + "?rota=animais/servicos")
+            .then(resposta => resposta.json())
+            .then(dados => {
+
+                document.getElementById("animaisServicos").innerHTML =
+                    JSON.stringify(dados);
+
+            });
+
+    </script>
+
+</body>
+</html>
